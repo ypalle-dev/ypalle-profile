@@ -25,10 +25,6 @@ The subjects will stay in a lane I actually work in:
 
 I am writing for people who already build on this stack. When a step is easy to skip, I will still write it down. I am not going to restate the product documentation.
 
-## What I will leave out
-
-Names, data, and anything that belongs to a client engagement. If a story needs a concrete shape, I will reduce it to a pattern and say that I did. The decision is the point. The account is not.
-
 ## A bar for the next note
 
 A load into Dataverse that can be run twice has to decide identity before it decides columns.
@@ -40,6 +36,6 @@ failure:      log the row, alert, keep the batch moving
 success:      the same key updates the same row
 ```
 
-That block is not a design from a project. It is the size and the honesty I want from the notes that follow. If I cannot show the option I rejected and the failure path, the note is not ready.
+That block is the size and the honesty I want from the notes that follow. If I cannot show the option I rejected and the failure path, the note is not ready.
 
 I would rather publish one of those a month than a stream of recaps.
