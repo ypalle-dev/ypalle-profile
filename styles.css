@@ -86,7 +86,7 @@ body {
 
 .nav {
   display: none;
-  gap: 1.25rem;
+  gap: 1rem;
 }
 .nav a {
   color: var(--text-muted);
@@ -539,6 +539,46 @@ main {
   letter-spacing: 0.06em;
 }
 .contact-link--static { cursor: default; }
+
+.section--writing { padding-top: 1rem; }
+
+.home-note {
+  display: block;
+  padding: 1.35rem 1.4rem;
+  border-radius: var(--radius);
+  background: linear-gradient(160deg, rgba(56, 189, 248, 0.08), transparent 55%), var(--bg-card);
+  border: 1px solid rgba(56, 189, 248, 0.2);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, transform 0.2s;
+}
+.home-note:hover {
+  transform: translateY(-2px);
+  border-color: rgba(56, 189, 248, 0.45);
+}
+.home-note__meta {
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+.home-note h3 {
+  margin: 0.45rem 0 0.45rem;
+  font-size: 1.2rem;
+  letter-spacing: -0.02em;
+}
+.home-note p {
+  margin: 0;
+  color: #c7d2e0;
+  max-width: 68ch;
+}
+.writing-more { margin: 1rem 0 0; }
+.writing-more a {
+  color: var(--accent);
+  font-weight: 600;
+  text-decoration: none;
+}
+.writing-more a:hover { text-decoration: underline; }
 
 .footer {
   position: relative;

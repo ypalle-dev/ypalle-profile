@@ -280,6 +280,29 @@ def write_index(posts: list[dict]) -> None:
     )
 
 
+def update_homepage(posts: list[dict]) -> None:
+    homepage = ROOT.parent / "index.html"
+    text = homepage.read_text(encoding="utf-8")
+    start = "<!-- writing:latest:start -->"
+    end = "<!-- writing:latest:end -->"
+    if start not in text or end not in text:
+        raise SystemExit("profile index.html is missing the writing:latest markers")
+    if posts:
+        post = posts[0]
+        date_label = post["date"].strftime("%B %-d, %Y")
+        minute_label = "1 min read" if post["minutes"] == 1 else f"{post['minutes']} min read"
+        latest = f"""<a class="home-note" href="blog/{escape(post["slug"])}.html">
+        <span class="home-note__meta">{date_label} · {minute_label}</span>
+        <h3>{escape(post["title"])}</h3>
+        <p>{escape(post["description"])}</p>
+      </a>"""
+    else:
+        latest = '<p class="home-note__meta">Notes will be linked here.</p>'
+    replacement = f"{start}\n      {latest}\n      {end}"
+    updated = re.sub(re.escape(start) + r".*?" + re.escape(end), replacement, text, count=1, flags=re.S)
+    homepage.write_text(updated, encoding="utf-8")
+
+
 def main() -> None:
     posts = [parse_post(path) for path in sorted(POSTS.glob("*.md"))]
     posts.sort(key=lambda post: post["date"], reverse=True)
@@ -292,6 +315,7 @@ def main() -> None:
     for post in posts:
         write_article(post)
     write_index(posts)
+    update_homepage(posts)
     print(f"Built {len(posts)} note{'s' if len(posts) != 1 else ''} into {ROOT}")
 
 
