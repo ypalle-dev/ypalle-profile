@@ -49,7 +49,7 @@ PAGE_START = """<!DOCTYPE html>
     <a class="brand" href="../index.html">YP</a>
     <nav class="nav" aria-label="Primary">
       <a href="../index.html">Profile</a>
-      <a href="index.html">Writing</a>
+      <a href="index.html">Blogs</a>
       <a href="../index.html#contact">Contact</a>
     </nav>
     <a class="btn btn--ghost topbar__cta" href="../index.html#contact">Get in touch</a>
@@ -59,7 +59,7 @@ PAGE_START = """<!DOCTYPE html>
 
 PAGE_END = """  </main>
   <footer class="footer">
-    <p>© <span id="year"></span> Yeswanth Palle · Field notes on Dynamics 365 and Power Platform</p>
+    <p>© <span id="year"></span> Yeswanth Palle · Blogs on Dynamics 365 and Power Platform</p>
   </footer>
   <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
 </body>
@@ -227,7 +227,7 @@ def write_article(post: dict) -> None:
     minute_label = "1 min read" if post["minutes"] == 1 else f"{post['minutes']} min read"
     body = f"""    <article class="article">
       <header class="article__header">
-        <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span><a href="index.html">Writing</a></p>
+        <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span><a href="index.html">Blogs</a></p>
         <div class="post-card__meta">
           <time datetime="{date_iso}">{date_label}</time>
           <span>{minute_label}</span>
@@ -239,7 +239,7 @@ def write_article(post: dict) -> None:
       <div class="prose">
         {post["html"]}
       </div>
-      <p class="article__end writing-more"><a href="index.html">All writing</a></p>
+      <p class="article__end writing-more"><a href="index.html">All blogs</a></p>
     </article>
 """
     path = ROOT / f"{post['slug']}.html"
@@ -258,10 +258,10 @@ def write_index(posts: list[dict]) -> None:
     cards = "\n".join(post_card(post, f"{post['slug']}.html") for post in posts)
     empty = '<p class="article__lede">The first note is still in draft.</p>' if not posts else ""
     body = f"""    <header class="page-intro">
-      <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span>Writing</p>
-      <span class="section__eyebrow">Field notes</span>
-      <h1>Writing</h1>
-      <p>Notes on Dynamics 365, Dataverse, and the pipelines that feed them. One problem at a time, with the option I turned down and the failure path included.</p>
+      <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span>Blogs</p>
+      <span class="section__eyebrow">Dynamics 365</span>
+      <h1>Blogs</h1>
+      <p>Community discussions on Dynamics 365 functionality and scenarios. What the product is doing, which option fits, and what to verify.</p>
     </header>
     <section class="section section--follow">
       <div class="post-list">
@@ -271,8 +271,8 @@ def write_index(posts: list[dict]) -> None:
 """
     (ROOT / "index.html").write_text(
         shell(
-            "Writing · Yeswanth Palle",
-            "Field notes by Yeswanth Palle on Dynamics 365, Dataverse, Power Platform, and delivery.",
+            "Blogs · Yeswanth Palle",
+            "Blogs by Yeswanth Palle on Dynamics 365 functionality, scenarios, and the Power Platform.",
             body,
             "website",
         ),
