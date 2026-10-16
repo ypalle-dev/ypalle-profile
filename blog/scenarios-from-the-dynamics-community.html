@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Yeswanth Palle" />
+  <title>Scenarios from the Dynamics community · Yeswanth Palle</title>
+  <meta name="description" content="Short blogs on Dynamics 365 functionality, taken from the scenarios that show up in community discussions." />
+  <meta property="og:title" content="Scenarios from the Dynamics community · Yeswanth Palle" />
+  <meta property="og:description" content="Short blogs on Dynamics 365 functionality, taken from the scenarios that show up in community discussions." />
+  <meta property="og:type" content="article" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--a" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--b" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html">YP</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html">Profile</a>
+      <a href="index.html">Blogs</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <a class="btn btn--ghost topbar__cta" href="../index.html#contact">Get in touch</a>
+  </header>
+  <main>
+    <article class="article">
+      <header class="article__header">
+        <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span><a href="index.html">Blogs</a></p>
+        <div class="post-card__meta">
+          <time datetime="2026-10-16">October 16, 2026</time>
+          <span>1 min read</span>
+        </div>
+        <h1>Scenarios from the Dynamics community</h1>
+        <p class="article__lede">Short blogs on Dynamics 365 functionality, taken from the scenarios that show up in community discussions.</p>
+        <div class="chips"><span>Dynamics 365</span><span>Dataverse</span><span>Power Platform</span></div>
+      </header>
+      <div class="prose">
+        <p>A community thread usually starts with a scenario, not a feature list. Someone is trying to complete a specific thing in Dynamics 365. The product offers more than one path. The useful answer is which path fits, and what it breaks when the data or the security role changes.</p>
+<p>That is what these blogs are for.</p>
+<p>I take part in those discussions. A blog is the longer form of a good answer: the scenario, the functionality involved, the options, and the one I would choose. Dataverse, model-driven apps, Power Automate, security, and solution ALM will show up because that is where the questions are.</p>
+<h2>What a post will cover</h2>
+<ul><li>The scenario, stated the way it shows up in a community question</li><li>The Dynamics functionality that actually decides it</li><li>The options, including the one that looks right and is not</li><li>What to verify before you rely on it</li></ul>
+<p>I am writing for people who configure and extend this stack. I will not restate the product documentation.</p>
+<h2>A bar for the next post</h2>
+<p>A scenario is specific enough when a reader can tell whether it is their case.</p>
+<pre><code class="language-text">scenario:  what the person is trying to complete
+feature:   the table, form, flow, or security behavior involved
+options:   the path that looks obvious, and the one that holds up
+check:     what still fails when the data or the role changes</code></pre>
+<p>If a post cannot name the scenario and the option turned down, it is not ready.</p>
+      </div>
+      <p class="article__end writing-more"><a href="index.html">All blogs</a></p>
+    </article>
+  </main>
+  <footer class="footer">
+    <p>© <span id="year"></span> Yeswanth Palle · Blogs on Dynamics 365 and Power Platform</p>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
