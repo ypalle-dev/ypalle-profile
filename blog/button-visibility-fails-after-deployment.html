@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Yeswanth Palle" />
+  <title>Why a button visibility formula fails after deployment · Yeswanth Palle</title>
+  <meta name="description" content="A Power Fx visibility rule can be correct and still disappear in the next environment, when the modern command and its library are not in the app solution." />
+  <meta property="og:title" content="Why a button visibility formula fails after deployment · Yeswanth Palle" />
+  <meta property="og:description" content="A Power Fx visibility rule can be correct and still disappear in the next environment, when the modern command and its library are not in the app solution." />
+  <meta property="og:type" content="article" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--a" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--b" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html">YP</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html">Profile</a>
+      <a href="index.html">Blogs</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <a class="btn btn--ghost topbar__cta" href="../index.html#contact">Get in touch</a>
+  </header>
+  <main>
+    <article class="article">
+      <header class="article__header">
+        <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span><a href="index.html">Blogs</a></p>
+        <div class="post-card__meta">
+          <time datetime="2026-10-19">October 19, 2026</time>
+          <span>4 min read</span>
+        </div>
+        <h1>Why a button visibility formula fails after deployment</h1>
+        <p class="article__lede">A Power Fx visibility rule can be correct and still disappear in the next environment, when the modern command and its library are not in the app solution.</p>
+        <div class="chips"><span>Dynamics 365</span><span>Power Apps</span><span>ALM</span></div>
+      </header>
+      <div class="prose">
+        <p>I chased a custom button whose Power Fx visibility formula worked in the environment where I built it and did nothing after the solutions were deployed. The formula was fine. The button had been created in the wrong place, so the command and the library that holds the formula did not travel together.</p>
+<p>Create the button from the model-driven app. Do not create it from the Commands list on the table.</p>
+<h2>Where to create the button</h2>
+<p>Power Fx actions and the visibility option <strong>Show on condition from formula</strong> are available when you open the command bar from the app designer. They are not available when you edit a command from the Commands list under a table in a solution. That list can still create a command record. It cannot author the formula the button depends on.</p>
+<ol><li>Open the solution that contains the model-driven app, select the app, and choose <strong>Edit</strong>.</li><li>In <strong>Pages</strong>, select <strong>... → Edit command bar</strong> next to the table.</li><li>Choose the location: <strong>Main grid</strong>, <strong>Main form</strong>, <strong>Subgrid view</strong>, or <strong>Associated view</strong>. Then choose <strong>New → Command</strong>.</li><li><strong>Save and publish</strong>.</li></ol>
+<p>If the table was added to the app only as a URL, <strong>Edit command bar</strong> is missing. Add it with <strong>Add page → Dataverse table</strong> and turn off <strong>Show in navigation</strong>. It stays out of the menu, and the command bar becomes editable.</p>
+<h2>If the button runs JavaScript</h2>
+<p>Keep the JavaScript web resource in the solution that owns the table. The command still belongs with the app.</p>
+<ul><li>Create and publish the web resource in the data solution.</li><li>Add the command from the app, as above. Set the action to <strong>Run JavaScript</strong> and select that web resource as the library.</li><li>After you save, open <strong>Web resources</strong> in the app solution. If the library was added there automatically, use <strong>Remove from this solution</strong>. Do not delete the web resource. It should exist only in the data solution.</li></ul>
+<h2>A modern command is two components</h2>
+<p>What you see under a table&#x27;s <strong>Commands</strong> list is the command, stored as an app action. It holds the label, the command bar location, and the action. A Power Fx visibility formula is not stored on that record. The command holds a reference to the formula.</p>
+<p>The formula lives in the app&#x27;s command component library. In a solution this shows up as a component library, often with <strong>DefaultCommandLibrary</strong> in the name. <strong>OnSelect</strong> Power Fx lives there too.</p>
+<p>The command and the library have to be deployed together. Both belong in the solution that contains the app. If the library is in the app solution and the commands stay in the data solution, two things break.</p>
+<p><strong>The solutions depend on each other.</strong> The app solution already depends on tables in the data solution. Commands in the data solution then depend on a library in the app solution. Imports and upgrades fail on that circle.</p>
+<p><strong>The wrong layer wins.</strong> In a managed environment the top layer for a component is the one that runs. An older copy of the app or the commands, brought in by the data solution, overrides the newer copy in the app solution. That is why a visibility formula can be correct in the authoring environment and absent after deployment.</p>
+<h2>What keeps the failure coming back</h2>
+<p>The same split causes three repeat problems.</p>
+<ul><li><strong>The target environment shows the old button.</strong> The authoring environment has one unmanaged layer, so the formula looks done. The target has managed layers. Whichever solution was installed later sits on top. If that layer is an older copy of the app or the commands, it hides the formula you just published.</li><li><strong>The command is tied to the app you edited.</strong> A modern command, and the component library created with it, cannot be added to a different app. You can copy the command and paste it into another app or another command bar location. Power Fx commands also cannot be converted to table scope or global scope, so they will not suddenly appear on the same table in every app.</li><li><strong>Taking a component back out of a managed environment is expensive.</strong> A component that landed in the wrong managed solution is not a normal delete. You need a holding solution and an upgrade. That is a poor price for a button.</li></ul>
+<h2>Split the solutions by what they own</h2>
+<p>Keep each kind of component in one solution, and install them in this order.</p>
+<ul><li><strong>Data:</strong> tables, columns, forms, views, choices, and JavaScript web resources</li><li><strong>Automation:</strong> cloud flows and processes</li><li><strong>App:</strong> the model-driven app, canvas apps, custom pages, the site map, commands, and the command library</li><li><strong>Security:</strong> security roles</li></ul>
+<p>Open the app from inside the app solution before you add a command, a page, or anything else on the app. New components are added to the solution you opened. Deployment order is data, then automation, then the app, then security.</p>
+<h2>The two pages worth keeping open</h2>
+<p><a href="https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/use-command-designer">Customize the command bar</a> is the authoring path from the app designer.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-apps/maker/model-driven-apps/command-designer-limitations">Command bar customization limitations</a> is the page that says Power Fx visibility is only authored from the app designer, and that a command library created in one app cannot be added to another.</p>
+      </div>
+      <p class="article__end writing-more"><a href="index.html">All blogs</a></p>
+    </article>
+  </main>
+  <footer class="footer">
+    <p>© <span id="year"></span> Yeswanth Palle · Blogs on Dynamics 365 and Power Platform</p>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
