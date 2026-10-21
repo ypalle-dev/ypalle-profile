@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Yeswanth Palle" />
+  <title>A flow that works in DEV and talks to the wrong environment after deployment · Yeswanth Palle</title>
+  <meta name="description" content="The flow can succeed and still read or write the environment where you built it. The connection reference and the environment variable are what move, not the connection you clicked while editing." />
+  <meta property="og:title" content="A flow that works in DEV and talks to the wrong environment after deployment · Yeswanth Palle" />
+  <meta property="og:description" content="The flow can succeed and still read or write the environment where you built it. The connection reference and the environment variable are what move, not the connection you clicked while editing." />
+  <meta property="og:type" content="article" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="bg-grid" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--a" aria-hidden="true"></div>
+  <div class="bg-glow bg-glow--b" aria-hidden="true"></div>
+  <header class="topbar">
+    <a class="brand" href="../index.html">YP</a>
+    <nav class="nav" aria-label="Primary">
+      <a href="../index.html">Profile</a>
+      <a href="index.html">Blogs</a>
+      <a href="../index.html#contact">Contact</a>
+    </nav>
+    <a class="btn btn--ghost topbar__cta" href="../index.html#contact">Get in touch</a>
+  </header>
+  <main>
+    <article class="article">
+      <header class="article__header">
+        <p class="crumb"><a href="../index.html">Profile</a><span aria-hidden="true">/</span><a href="index.html">Blogs</a></p>
+        <div class="post-card__meta">
+          <time datetime="2026-10-21">October 21, 2026</time>
+          <span>3 min read</span>
+        </div>
+        <h1>A flow that works in DEV and talks to the wrong environment after deployment</h1>
+        <p class="article__lede">The flow can succeed and still read or write the environment where you built it. The connection reference and the environment variable are what move, not the connection you clicked while editing.</p>
+        <div class="chips"><span>Power Automate</span><span>Dataverse</span><span>ALM</span></div>
+      </header>
+      <div class="prose">
+        <p>I imported a cloud flow, turned it on, and watched a successful run. The row it created was not in that environment. It was in the environment where I had built the flow. The steps were fine. The flow was still holding the first environment.</p>
+<p>A connection does not travel in a solution. A connection reference does. If you never look at the reference after import, the flow keeps using whatever connection was selected when the reference was created.</p>
+<h2>What the solution actually contains</h2>
+<p>While you edit a flow, you pick a connection. That connection belongs to a user, in one environment. A solution cannot carry it.</p>
+<p>When the flow is in a solution, each connector action uses a <strong>connection reference</strong>. The reference is the solution component. During import, the target environment has to bind that reference to a connection that already exists there. Until you do that, the flow is not really deployed. It is a copy of the steps, still aimed at the connection from the environment you exported.</p>
+<p>Use the <strong>Microsoft Dataverse</strong> connector that runs in the current environment. A connection for that connector does not store an environment URL. The flow reads and writes the environment it is running in.</p>
+<p>The older Dataverse connector is different. Its connection is pinned to the environment you chose in the connection dialog. Map that reference to a connection someone created while looking at the original environment, and every run in the target still talks to the original environment. The run is green. The data is in the wrong place.</p>
+<h2>If the flow calls a URL</h2>
+<p>The current-environment connector is not always an option. An HTTP action, a custom connector, or a Web API call often has the environment address typed into the action. That text is part of the flow definition, so export and import copy it as it stands.</p>
+<p>Put the address in an environment variable. The definition of the variable travels in the solution. The current value should be set in each environment, and it should not be the value from the environment you exported.</p>
+<p>Before you export, remove the current value from the solution. Leave the variable definition. On import, set the value to that environment&#x27;s address. If the exported value stays in the solution, the import writes the original address into the target, and the flow calls home.</p>
+<h2>Where the pieces belong</h2>
+<p>Put the flow and its connection references in the automation solution. Put environment variable definitions in the same solution as the component that reads them. Install the data solution first, so tables exist before a flow tries to use them, then the automation solution.</p>
+<p>After import, in the target environment:</p>
+<ol><li>Open the imported flow and read the connection references on it. Do not check this from the environment you built in.</li><li>For each reference, use a connection created in this environment. For Dataverse, use the current-environment connector.</li><li>Set each environment variable to this environment. Confirm the value is not the address you exported.</li><li>Turn the flow on only after those two are done.</li><li>Trigger one run. Open the row it created or updated, in this environment. A successful run is not the check. The row&#x27;s environment is the check.</li></ol>
+<h2>The two pages worth keeping open</h2>
+<p><a href="https://learn.microsoft.com/en-us/power-apps/maker/data-platform/create-connection-reference">Connection references</a> is how a solution carries the connector without carrying the connection.</p>
+<p><a href="https://learn.microsoft.com/en-us/power-apps/maker/data-platform/environmentvariables">Environment variables</a> is where an address belongs when an action cannot use the current environment.</p>
+      </div>
+      <p class="article__end writing-more"><a href="index.html">All blogs</a></p>
+    </article>
+  </main>
+  <footer class="footer">
+    <p>© <span id="year"></span> Yeswanth Palle · Blogs on Dynamics 365 and Power Platform</p>
+  </footer>
+  <script>document.getElementById("year").textContent = new Date().getFullYear();</script>
+</body>
+</html>
